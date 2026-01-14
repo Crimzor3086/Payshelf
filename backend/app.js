@@ -2,18 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const admin = require('firebase-admin');
+const { admin, db } = require('./Firebase');
 const serviceAccount = require('./serviceAccountKey.json');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Initialize Firebase
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-const db = admin.firestore();
 app.locals.db = db; // make db accessible in controllers
 
 // Routes
