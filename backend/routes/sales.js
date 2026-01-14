@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { recordSale, paymentCallback } = require('../controllers/salesController');
+const { initiatePayment, paymentCallback } = require('../controllers/salesController');
 
-router.post('/', recordSale);
-router.post('/payment-callback', paymentCallback);
+router.post('/pay', initiatePayment);
+router.post('/callback', paymentCallback);
 
 module.exports = router;

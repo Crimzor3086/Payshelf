@@ -1,44 +1,95 @@
-const Africastalking = require('africastalking');
-const AT = Africastalking({
-  username: process.env.AT_USERNAME,
-  apiKey: process.env.AT_KEY
-});
-const sms = AT.SMS;
-const payments = AT.PAYMENTS;
+const { db } = require('../firebase');
+const { payments, sms } = require('../services/africasTalking');
 
-async function recordSale(req, res) {
+exports.initiatePayment = async (req, res) => {
   try {
-    const db = req.app.locals.db;
     const { productID, quantity, customerPhone } = req.body;
 
-    // Fetch product
+    // 1️⃣ Get product
     const productDoc = await db.collection('products').doc(productID).get();
-    if (!productDoc.exists) return res.status(404).json({ error: 'Product not found' });
+    if (!productDoc.exists) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
 
     const product = productDoc.data();
     const totalPrice = product.price * quantity;
 
-    // Deduct inventory
-    await db.collection('products').doc(productID).update({ stock: product.stock - quantity });
+    // 2️⃣ Create sale (PENDING)
+    const saleRef = await db.collection('sales').add({
+      productID,
+      quantity,
+      totalPrice,
+      customerPhone,
+      paymentStatus: 'PENDING',
+      createdAt: Date.now(),
+    });
 
-    // Record sale
-    const saleRef = db.collection('sales').doc();
-    await saleRef.set({ productID, quantity, totalPrice, customerPhone, paymentStatus: 'pending', timestamp: Date.now() });
+    // 3️⃣ Trigger STK Push
+    const paymentResponse = await payments.mobileCheckout({
+      productName: process.env.AT_PRODUCT_NAME,
+      phoneNumber: customerPhone,
+      currencyCode: 'KES',
+      amount: totalPrice,
+      metadata: {
+        saleId: saleRef.id,
+      },
+    });
 
-    // Send SMS (receipt)
-    const message = `Thank you for shopping at PayShelf. Product: ${product.productName}. Qty: ${quantity}. Total: KES ${totalPrice}.`;
-    await sms.send({ to: [customerPhone], message });
+    res.json({
+      message: 'STK push sent',
+      saleId: saleRef.id,
+      paymentResponse,
+    });
 
-    res.json({ message: 'Sale recorded and SMS sent', saleID: saleRef.id });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
-}
+};
 
-async function paymentCallback(req, res) {
-  // To handle payment confirmation callbacks from Africa’s Talking
-  // Update sale's paymentStatus in DB
-  res.send('Payment callback received');
-}
+exports.paymentCallback = async (req, res) => {
+  try {
+    const data = req.body;
 
-module.exports = { recordSale, paymentCallback };
+    /*
+    data structure (important fields):
+    data.status
+    data.requestMetadata.saleId
+    data.value.amount
+    data.value.phoneNumber
+    */
+
+    const saleId = data.requestMetadata.saleId;
+
+    if (data.status === 'Success') {
+      // Mark sale as PAID
+      await db.collection('sales').doc(saleId).update({
+        paymentStatus: 'PAID',
+        paidAt: Date.now(),
+      });
+
+      // Get sale + product
+      const saleDoc = await db.collection('sales').doc(saleId).get();
+      const sale = saleDoc.data();
+
+      const productDoc = await db.collection('products').doc(sale.productID).get();
+      const product = productDoc.data();
+
+      // Deduct stock
+      await db.collection('products').doc(sale.productID).update({
+        stock: product.stock - sale.quantity,
+      });
+
+      // Send SMS receipt
+      await sms.send({
+        to: [sale.customerPhone],
+        message: `PayShelf Receipt\nItem: ${product.productName}\nQty: ${sale.quantity}\nTotal: KES ${sale.totalPrice}\nThank you!`,
+      });
+    }
+
+    res.status(200).send('Callback received');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error processing callback');
+  }
+};
