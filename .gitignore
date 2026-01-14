@@ -34,5 +34,4 @@ backend/uploads/
 *.cache
 
 # Firebase service account key (contains sensitive credentials)
-
-backend/serviceAccountKey.json
+serviceAccountKey.json
