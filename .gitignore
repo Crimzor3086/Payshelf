@@ -1,6 +1,3 @@
-# Dependencies
-node_modules/
-
 # Build outputs
 /dist/
 /build/
@@ -15,6 +12,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Env files
+serviceAccountKey.json
 .env
 .env.*
 firebase.env
@@ -35,4 +33,6 @@ backend/uploads/
 *.local
 *.cache
 
+# Firebase service account key (contains sensitive credentials)
 
+backend/serviceAccountKey.json
