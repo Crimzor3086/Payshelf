@@ -1,8 +1,8 @@
+const { db } = require('../Firebase');
+
 async function addProduct(req, res) {
   try {
-    const db = req.app.locals.db;
     const { productName, price, stock, lowStockThreshold } = req.body;
-
     const docRef = db.collection('products').doc();
     await docRef.set({ productName, price, stock, lowStockThreshold });
     res.json({ message: 'Product added', id: docRef.id });
@@ -13,7 +13,6 @@ async function addProduct(req, res) {
 
 async function listProducts(req, res) {
   try {
-    const db = req.app.locals.db;
     const snapshot = await db.collection('products').get();
     const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(products);
