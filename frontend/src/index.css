@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PayShelf Design System - African Retail POS
+   Colors: Deep green (trust), Gold (value), Warm neutrals
+   All colors in HSL format
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --background: 40 30% 98%;
+    --foreground: 160 30% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 160 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 30% 15%;
+
+    /* Primary: Deep Emerald Green - Trust & Money */
+    --primary: 160 60% 30%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 160 60% 25%;
+
+    /* Secondary: Light green tint */
+    --secondary: 160 30% 95%;
+    --secondary-foreground: 160 60% 25%;
+
+    /* Accent: Warm Gold - Value & Rewards */
+    --accent: 40 90% 50%;
+    --accent-foreground: 40 90% 15%;
+    --accent-soft: 40 60% 95%;
+
+    /* Muted */
+    --muted: 40 20% 94%;
+    --muted-foreground: 160 10% 45%;
+
+    /* Status Colors */
+    --success: 145 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 145 50% 94%;
+
+    --warning: 40 95% 50%;
+    --warning-foreground: 40 95% 15%;
+    --warning-soft: 40 80% 94%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-soft: 0 60% 95%;
+
+    /* Stock Level Colors */
+    --stock-healthy: 145 60% 40%;
+    --stock-low: 40 95% 50%;
+    --stock-critical: 0 70% 50%;
+
+    /* UI Elements */
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 160 60% 30%;
+    --radius: 0.75rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(160 30% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(160 30% 15% / 0.08), 0 2px 4px -2px hsl(160 30% 15% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(160 30% 15% / 0.08), 0 4px 6px -4px hsl(160 30% 15% / 0.05);
+    --shadow-card: 0 1px 3px 0 hsl(160 30% 15% / 0.06), 0 1px 2px -1px hsl(160 30% 15% / 0.06);
+
+    /* Sidebar */
+    --sidebar-background: 160 60% 30%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 160 60% 30%;
+    --sidebar-accent: 160 50% 35%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 160 50% 35%;
+    --sidebar-ring: 40 90% 50%;
+
+    /* Chart Colors */
+    --chart-1: 160 60% 40%;
+    --chart-2: 40 90% 50%;
+    --chart-3: 200 70% 50%;
+    --chart-4: 280 60% 55%;
+    --chart-5: 30 80% 55%;
+  }
+
+  .dark {
+    --background: 160 30% 10%;
+    --foreground: 40 20% 95%;
+
+    --card: 160 25% 15%;
+    --card-foreground: 40 20% 95%;
+
+    --popover: 160 25% 15%;
+    --popover-foreground: 40 20% 95%;
+
+    --primary: 160 50% 45%;
+    --primary-foreground: 160 30% 10%;
+
+    --secondary: 160 25% 20%;
+    --secondary-foreground: 40 20% 95%;
+
+    --accent: 40 90% 55%;
+    --accent-foreground: 40 90% 10%;
+
+    --muted: 160 20% 20%;
+    --muted-foreground: 40 15% 60%;
+
+    --border: 160 20% 25%;
+    --input: 160 20% 25%;
+    --ring: 160 50% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Large numeric displays for prices */
+  .price-display {
+    @apply font-bold tracking-tight;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Touch-friendly button base */
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes slide-up {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes scale-in {
+    from { 
+      opacity: 0; 
+      transform: scale(0.95); 
+    }
+    to { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out forwards;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.1), transparent);
+    background-size: 200% 100%;
+  }
+
+  /* Card hover effects */
+  .card-interactive {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  /* Status badges */
+  .badge-success {
+    @apply bg-success-soft text-success;
+  }
+
+  .badge-warning {
+    @apply bg-warning-soft text-warning-foreground;
+  }
+
+  .badge-error {
+    @apply bg-destructive-soft text-destructive;
+  }
+}

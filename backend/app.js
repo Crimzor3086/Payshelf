@@ -15,6 +15,8 @@ app.locals.db = db; // make db accessible in controllers
 app.use('/users', require('./routes/users'));
 app.use('/inventory', require('./routes/inventory'));
 app.use('/sales', require('./routes/sales'));
+const analyticsRoutes = require('./routes/analytics');
+app.use('/analytics', analyticsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`PayShelf backend running on port ${PORT}`));
