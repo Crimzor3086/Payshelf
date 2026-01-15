@@ -1,73 +1,124 @@
-# Welcome to your Lovable project
+# PayShelf - Retail POS for Africa
 
-## Project info
+A modern retail Point of Sale (POS) platform built for African SMEs with M-Pesa integration.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Point of Sale (POS)**: Fast and intuitive checkout system
+- **Inventory Management**: Track stock levels, low stock alerts, and restocking
+- **M-Pesa Integration**: Seamless mobile money payments via STK Push
+- **Analytics Dashboard**: Real-time sales analytics and insights
+- **Customer Loyalty**: Track customer points and rewards
+- **JWT Authentication**: Secure user authentication
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18 + TypeScript + Vite
+- **UI Components**: shadcn/ui + Radix UI
+- **Styling**: Tailwind CSS
+- **State Management**: React Query (TanStack Query)
+- **Routing**: React Router v6
+- **Charts**: Recharts
+- **Backend**: Node.js + Express + Firebase
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ and npm (or use [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
+- Backend server running (see backend README)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Step 1: Navigate to the frontend directory
+cd frontend
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Create environment file
+cp .env.example .env
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Update .env with your backend API URL
+# VITE_API_URL=http://localhost:3001
+
+# Step 5: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm test` - Run tests
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Environment Variables
 
-## What technologies are used for this project?
+Create a `.env` file in the frontend directory:
 
-This project is built with:
+```env
+VITE_API_URL=http://localhost:3001
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project Structure
 
-## How can I deploy this project?
+```
+frontend/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── contexts/       # React contexts (Auth, etc.)
+│   ├── hooks/          # Custom React hooks
+│   ├── lib/            # Utilities and API clients
+│   │   └── api/        # API service modules
+│   ├── pages/          # Page components
+│   └── data/           # Mock data (for development)
+├── public/             # Static assets
+└── dist/               # Production build output
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## API Integration
 
-## Can I connect a custom domain to my Lovable project?
+The frontend communicates with the backend API through centralized API clients:
 
-Yes, you can!
+- `lib/api/auth.ts` - Authentication endpoints
+- `lib/api/inventory.ts` - Inventory management
+- `lib/api/sales.ts` - Sales and payments
+- `lib/api/analytics.ts` - Analytics and reports
+- `lib/api/loyalty.ts` - Customer loyalty program
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+All API requests are handled by `lib/api/apiClient.ts` which:
+- Automatically attaches JWT tokens
+- Handles 401 errors with automatic redirect to login
+- Provides consistent error handling
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Authentication
+
+The app uses JWT authentication:
+- Tokens are stored in `localStorage`
+- Protected routes require valid authentication
+- Expired tokens automatically redirect to login
+
+## Deployment
+
+### Build for Production
+
+```sh
+npm run build
+```
+
+The production build will be in the `dist/` directory.
+
+### Deploy to Vercel/Netlify
+
+1. Connect your repository
+2. Set environment variables (`VITE_API_URL`)
+3. Deploy
+
+## License
+
+Copyright © 2024 PayShelf
