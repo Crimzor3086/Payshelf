@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { authApi, AuthResponse } from '@/lib/api/auth';
 
 interface User {
   id: string;
   phone: string;
-  storeName: string;
+  name: string;
+  storeName?: string;
 }
 
 interface AuthContextType {
@@ -13,6 +14,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (phone: string, password: string) => Promise<void>;
+  register: (userData: { name: string; shopName: string; phone: string; password: string }) => Promise<void>;
   logout: () => void;
 }
 
@@ -37,42 +39,70 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check for existing token on mount
-    const storedToken = localStorage.getItem('payshelf_token');
-    const storedUser = localStorage.getItem('payshelf_user');
+    const storedToken = localStorage.getItem('token');
     
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+    if (storedToken) {
+      try {
+        const currentUser = authApi.getCurrentUser();
+        if (currentUser) {
+          setToken(storedToken);
+          setUser({
+            id: currentUser.id,
+            phone: currentUser.phone,
+            name: currentUser.phone, // Fallback to phone if name not in token
+            storeName: `Store ${currentUser.phone.slice(-4)}`, // Fallback store name
+          });
+        } else {
+          // Invalid token, clear it
+          localStorage.removeItem('token');
+        }
+      } catch (error) {
+        localStorage.removeItem('token');
+      }
     }
     setIsLoading(false);
   }, []);
 
   const login = async (phone: string, password: string): Promise<void> => {
-    // Simulate API call - in production, this would call your backend
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Demo validation
-    if (phone === '+254712345678' && password === 'demo123') {
-      const mockUser: User = {
-        id: '1',
-        phone: phone,
-        storeName: 'Mama Njeri\'s Shop',
-      };
-      const mockToken = 'demo_jwt_token_' + Date.now();
+    try {
+      const response: AuthResponse = await authApi.login({ phone, password });
+      const { token: authToken, user: userData } = response;
       
-      localStorage.setItem('payshelf_token', mockToken);
-      localStorage.setItem('payshelf_user', JSON.stringify(mockUser));
+      localStorage.setItem('token', authToken);
+      setToken(authToken);
+      setUser({
+        id: userData.id,
+        phone: userData.phone,
+        name: userData.name,
+        storeName: userData.name ? `${userData.name}'s Shop` : `Store ${userData.phone.slice(-4)}`,
+      });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please check your credentials.';
+      throw new Error(errorMessage);
+    }
+  };
+
+  const register = async (userData: { name: string; shopName: string; phone: string; password: string }): Promise<void> => {
+    try {
+      const response: AuthResponse = await authApi.register(userData);
+      const { token: authToken, user: userData: registeredUser } = response;
       
-      setToken(mockToken);
-      setUser(mockUser);
-    } else {
-      throw new Error('Invalid phone number or password');
+      localStorage.setItem('token', authToken);
+      setToken(authToken);
+      setUser({
+        id: registeredUser.id,
+        phone: registeredUser.phone,
+        name: registeredUser.name,
+        storeName: userData.shopName,
+      });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message || 'Registration failed. Please try again.';
+      throw new Error(errorMessage);
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('payshelf_token');
-    localStorage.removeItem('payshelf_user');
+    authApi.logout();
     setToken(null);
     setUser(null);
   };
@@ -85,6 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated: !!token,
         isLoading,
         login,
+        register,
         logout,
       }}
     >

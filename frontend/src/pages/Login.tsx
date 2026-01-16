@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -110,7 +110,13 @@ const Login: React.FC = () => {
 
             <div className="mt-6 pt-4 border-t border-border">
               <p className="text-xs text-center text-muted-foreground">
-                Demo: +254712345678 / demo123
+                Don't have an account?{' '}
+                <Link
+                  to="/signup"
+                  className="text-primary font-medium hover:underline"
+                >
+                  Sign up
+                </Link>
               </p>
             </div>
           </div>

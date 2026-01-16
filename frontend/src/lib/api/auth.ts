@@ -7,7 +7,7 @@ export interface LoginCredentials {
 
 export interface RegisterData extends LoginCredentials {
   name: string;
-  email?: string;
+  shopName: string;
 }
 
 export interface AuthResponse {
