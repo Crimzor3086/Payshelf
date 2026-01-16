@@ -121,4 +121,4 @@ The production build will be in the `dist/` directory.
 
 ## License
 
-Copyright © 2024 PayShelf
+Copyright © 2026 PayShelf
