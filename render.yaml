@@ -3,13 +3,13 @@ services:
     name: payshelf-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
+      # PORT is automatically set by Render
       # Add your Firebase and other environment variables here
       # - key: FIREBASE_PROJECT_ID
       #   value: your-project-id
