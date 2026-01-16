@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: payshelf-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Add your Firebase and other environment variables here
+      # - key: FIREBASE_PROJECT_ID
+      #   value: your-project-id
+      # - key: FRONTEND_URL
+      #   value: https://your-site.netlify.app

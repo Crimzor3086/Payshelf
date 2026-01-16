@@ -2,11 +2,17 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+// Log API URL in development for debugging
+if (import.meta.env.DEV) {
+  console.log('API Base URL:', API_URL);
+}
+
 export const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 second timeout
 });
 
 // Request interceptor to add auth token

@@ -6,7 +6,30 @@ const { admin, db } = require('./Firebase');
 const serviceAccount = require('./serviceAccountKey.json');
 
 const app = express();
-app.use(cors());
+
+// CORS configuration - allow frontend from Netlify and localhost for development
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:8080',
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean); // Remove undefined values
+
+app.use(cors({
+  origin: allowedOrigins.length > 0 
+    ? (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      }
+    : true, // If no FRONTEND_URL is set, allow all origins (for development)
+  credentials: true,
+}));
+
 app.use(bodyParser.json());
 
 app.locals.db = db; // make db accessible in controllers
