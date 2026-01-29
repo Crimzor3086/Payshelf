@@ -2,14 +2,38 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import VerifyPage from "./pages/VerifyPage";
-import Dashboard from "./pages/Dashboard";
-import ProductsPage from "./pages/ProductsPage";
-import TransactionsPage from "./pages/TransactionsPage";
-import NotificationsPage from "./pages/NotificationsPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Layouts
+import PublicLayout from "./layouts/PublicLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import DashboardLayout from "./layouts/DashboardLayout";
+
+// Public Pages
+import Landing from "./pages/Landing";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+
+// Auth Pages
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import OTPVerification from "./pages/auth/OTPVerification";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
+
+// Dashboard Pages
+import Dashboard from "./pages/dashboard/Dashboard";
+import WalletPage from "./pages/dashboard/WalletPage";
+import PaymentsPage from "./pages/dashboard/PaymentsPage";
+import TransactionsPage from "./pages/dashboard/TransactionsPage";
+import ReceiptsPage from "./pages/dashboard/ReceiptsPage";
+import MerchantPage from "./pages/dashboard/MerchantPage";
+import ProductsPage from "./pages/dashboard/ProductsPage";
+import InvoicesPage from "./pages/dashboard/InvoicesPage";
+import CustomersPage from "./pages/dashboard/CustomersPage";
+import NotificationsPage from "./pages/dashboard/NotificationsPage";
+import SettingsPage from "./pages/dashboard/SettingsPage";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,21 +45,38 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/verify" element={<VerifyPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/transactions" element={<TransactionsPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          {/* Redirects for convenience */}
-          <Route path="/send" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/receive" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/pay" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/payments" element={<Navigate to="/transactions" replace />} />
-          <Route path="/customers" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/settings" element={<Navigate to="/dashboard" replace />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* Public Routes */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Landing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Route>
+
+          {/* Auth Routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify" element={<OTPVerification />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+          </Route>
+
+          {/* Dashboard Routes */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="wallet" element={<WalletPage />} />
+            <Route path="payments" element={<PaymentsPage />} />
+            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="receipts" element={<ReceiptsPage />} />
+            <Route path="merchant" element={<MerchantPage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="invoices" element={<InvoicesPage />} />
+            <Route path="customers" element={<CustomersPage />} />
+            <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
+
+          {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

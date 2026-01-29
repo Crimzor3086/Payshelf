@@ -55,15 +55,12 @@ export default function LandingPage() {
           </Link>
           
           <div className="hidden md:flex items-center gap-8">
-            <Link to="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Features
-            </Link>
-            <Link to="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </Link>
-            <Link to="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            </a>
+            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               About
-            </Link>
+            </a>
           </div>
 
           <div className="flex items-center gap-3">
