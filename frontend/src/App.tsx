@@ -54,6 +54,10 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/security" element={<SecurityPage />} />
+            <Route path="/faq" element={<FAQPage />} />
           </Route>
 
           {/* Auth Routes */}
