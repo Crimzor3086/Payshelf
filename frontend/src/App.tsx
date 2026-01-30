@@ -13,6 +13,10 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import SecurityPage from "./pages/SecurityPage";
+import FAQPage from "./pages/FAQPage";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
